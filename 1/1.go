@@ -1,15 +1,15 @@
 package main
 
 import (
-	"aoc2020/input"
+	"aoc2020/reader"
 	"fmt"
 	"log"
 )
 
 func sumProd(ns []int, tot int) (int, error) {
-	var inputs map[int]bool
+	inputs := make(map[int]bool)
 	for _, n := range ns {
-		if _, ok := input[tot-n]; ok {
+		if _, ok := inputs[tot-n]; ok {
 			return n * (tot - n), nil
 		}
 		inputs[n] = true
@@ -18,11 +18,11 @@ func sumProd(ns []int, tot int) (int, error) {
 }
 
 func main() {
-	ls, err := input.ReadInput("input/1.txt")
+	ls, err := reader.ReadInput("input/1.txt")
 	if err != nil {
 		log.Fatalf("error reading input: %v", err)
 	}
-	ns, err := input.ParseInput(ls)
+	ns, err := reader.ParseInput(ls)
 	if err != nil {
 		log.Fatalf("error parsing input: %v", err)
 	}
