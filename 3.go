@@ -27,7 +27,7 @@ func (g grid) rows() int {
 }
 
 func (g grid) isTree(r, c int) bool {
-	return g.trees[r][c % g.repWidth()]
+	return g.trees[r][c%g.repWidth()]
 }
 
 type runParams struct {
@@ -36,12 +36,12 @@ type runParams struct {
 
 func (g grid) countTrees(rp runParams, r, c int) int {
 	cnt := 0
-	r, c = r + rp.rowRun, c + rp.colRun
+	r, c = r+rp.rowRun, c+rp.colRun
 	for r < g.rows() {
 		if g.isTree(r, c) {
 			cnt += 1
 		}
-		r, c = r + rp.rowRun, c + rp.colRun
+		r, c = r+rp.rowRun, c+rp.colRun
 	}
 	return cnt
 }
@@ -84,7 +84,7 @@ func main() {
 	}
 	prod := 1
 	for _, rp := range rps {
-		prod *= g.countTrees(rp, /*r=*/0, /*c=*/0)
+		prod *= g.countTrees(rp /*r=*/, 0 /*c=*/, 0)
 	}
 	log.Printf("answer is: %d", prod)
 }

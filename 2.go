@@ -30,7 +30,7 @@ func (p sledPolicy) valid(pass string) bool {
 type tobogganPolicy struct {
 	// 1-indexed positions in the string. exactly 1 must have r at the location.
 	pos1, pos2 int
-	b        byte
+	b          byte
 }
 
 func (p tobogganPolicy) valid(pass string) bool {
@@ -45,24 +45,24 @@ func (p tobogganPolicy) valid(pass string) bool {
 func parsePolicyParts(s string) (int, int, byte, error) {
 	parts := strings.Split(s, " ")
 	if len(parts) != 2 {
-		return 0, 0, 0,  fmt.Errorf("incorrect number of parts to create policy: %v", parts)
+		return 0, 0, 0, fmt.Errorf("incorrect number of parts to create policy: %v", parts)
 	}
 	limits := strings.Split(parts[0], "-")
 	if len(limits) != 2 {
-		return 0, 0, 0,  fmt.Errorf("incorrect number of parts to create limits: %v", limits)
+		return 0, 0, 0, fmt.Errorf("incorrect number of parts to create limits: %v", limits)
 	}
 	int1, err := strconv.Atoi(limits[0])
 	if err != nil {
-		return 0, 0, 0,  fmt.Errorf("error parsing int1 from %q: %v", limits[0], err)
+		return 0, 0, 0, fmt.Errorf("error parsing int1 from %q: %v", limits[0], err)
 	}
 	int2, err := strconv.Atoi(limits[1])
 	if err != nil {
-		return 0, 0, 0,  fmt.Errorf("error parsing int2 from %q: %v", limits[1], err)
+		return 0, 0, 0, fmt.Errorf("error parsing int2 from %q: %v", limits[1], err)
 	}
 	cs := strings.TrimSpace(parts[1])
 	if len(cs) != 1 {
-		return 0, 0, 0,  fmt.Errorf("expected only a rune as part of password policy, found: %q", cs)
-}
+		return 0, 0, 0, fmt.Errorf("expected only a rune as part of password policy, found: %q", cs)
+	}
 	return int1, int2, cs[0], nil
 }
 
@@ -88,7 +88,7 @@ func validPasswords(in map[tobogganPolicy][]string) int {
 	for pol, ps := range in {
 		for _, p := range ps {
 			if pol.valid(p) {
-				cnt+=1
+				cnt += 1
 			}
 		}
 	}
