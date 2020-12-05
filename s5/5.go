@@ -1,15 +1,10 @@
-package main
+package s5
 
 import (
-	"aoc2020/reader"
 	"errors"
-	"flag"
 	"fmt"
-	"log"
 	"regexp"
 )
-
-var inputPath = flag.String("input_path", "input/5.txt", "path to the input data")
 
 type seat struct {
 	row, col int
@@ -37,15 +32,15 @@ var re = regexp.MustCompile(`([FB]{7})([RL]{3})`)
 func parseSeat(rep string) (seat, error) {
 	matches := re.FindStringSubmatch(rep)
 	if len(matches) != 3 {
-		return seat{}, fmt.Errorf("error matching regex: ", matches)
+		return seat{}, fmt.Errorf("error matching regex: %s", matches)
 	}
 	row, err := parseBinary(matches[1], 'F', 'B')
 	if err != nil {
-		return seat{}, fmt.Errorf("error parsing row: %v")
+		return seat{}, fmt.Errorf("error parsing row: %v", err)
 	}
 	col, err := parseBinary(matches[2], 'L', 'R')
 	if err != nil {
-		return seat{}, fmt.Errorf("error parsing col: %v")
+		return seat{}, fmt.Errorf("error parsing col: %v", err)
 	}
 	return seat{row: row, col: col}, nil
 }
@@ -86,19 +81,14 @@ func findSeat(ss []seat) (int, error) {
 	return 0, errors.New("failed to find empty seats")
 }
 
-func main() {
-	flag.Parse()
-	ls, err := reader.ReadInput(*inputPath)
-	if err != nil {
-		log.Fatalf("error reading input: %v", err)
-	}
+func Solve(ls []string) (int, error) {
 	ss, err := parseInput(ls)
 	if err != nil {
-		log.Fatalf("error parsing input as seats: %v", err)
+		return 0, fmt.Errorf("error parsing input as seats: %v", err)
 	}
 	ans, err := findSeat(ss)
 	if err != nil {
-		log.Fatal("failed to find seat: %v")
+		return 0, fmt.Errorf("failed to find seat: %v", err)
 	}
-	log.Printf("answer is: %d", ans)
+	return ans, nil
 }

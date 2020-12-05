@@ -1,13 +1,9 @@
-package main
+package s3
 
 import (
-	"aoc2020/reader"
-	"flag"
 	"fmt"
 	"log"
 )
-
-var inputPath = flag.String("input_path", "input/3.txt", "path to the input data")
 
 type grid struct {
 	// trees represents the grid of trees. The first dimension is the rows. The columns repeat
@@ -72,19 +68,14 @@ var rps = []runParams{
 	{rowRun: 2, colRun: 1},
 }
 
-func main() {
-	flag.Parse()
-	ls, err := reader.ReadInput(*inputPath)
-	if err != nil {
-		log.Fatalf("error reading input: %v", err)
-	}
+func Solve(ls []string) (int, error) {
 	g, err := parseInput(ls)
 	if err != nil {
-		log.Fatalf("error parsing input as grid: %v", err)
+		return 0, fmt.Errorf("error parsing input as grid: %v", err)
 	}
 	prod := 1
 	for _, rp := range rps {
 		prod *= g.countTrees(rp /*r=*/, 0 /*c=*/, 0)
 	}
-	log.Printf("answer is: %d", prod)
+	return prod, nil
 }

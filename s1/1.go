@@ -1,9 +1,8 @@
-package main
+package s1
 
 import (
 	"aoc2020/reader"
 	"fmt"
-	"log"
 )
 
 func sumProd(ns []int, tot int) (int, error) {
@@ -36,18 +35,18 @@ func sum3Prod(ns []int, tot int) (int, error) {
 	return 0, fmt.Errorf("no products found for 3 numbers with total %d", tot)
 }
 
-func main() {
+func Solve(ls []string) (int, error){
 	ls, err := reader.ReadInput("input/1.txt")
 	if err != nil {
-		log.Fatalf("error reading input: %v", err)
+		return 0, fmt.Errorf("error reading input: %v", err)
 	}
 	ns, err := reader.ParseInput(ls)
 	if err != nil {
-		log.Fatalf("error parsing input: %v", err)
+		return 0, fmt.Errorf("error parsing input: %v", err)
 	}
 	ans, err := sum3Prod(ns, 2020)
 	if err != nil {
-		log.Fatalf("error solving problem: %v", err)
+		return 0, fmt.Errorf("error solving problem: %v", err)
 	}
-	log.Printf("answer is: %d", ans)
+	return ans, nil
 }

@@ -1,15 +1,11 @@
-package main
+package s2
 
 import (
-	"aoc2020/reader"
-	"flag"
 	"fmt"
 	"log"
 	"strconv"
 	"strings"
 )
-
-var inputPath = flag.String("input_path", "input/2.txt", "path to the input data")
 
 type sledPolicy struct {
 	// number of times s must appear in a valid password.
@@ -95,16 +91,10 @@ func validPasswords(in map[tobogganPolicy][]string) int {
 	return cnt
 }
 
-func main() {
-	flag.Parse()
-	ls, err := reader.ReadInput(*inputPath)
-	if err != nil {
-		log.Fatalf("error reading input: %v", err)
-	}
+func Solve(ls []string) (int, error) {
 	ps, err := parseInput(ls)
 	if err != nil {
-		log.Fatalf("error parsing input: %v", err)
+		return 0, fmt.Errorf("error parsing input: %v", err)
 	}
-	cnt := validPasswords(ps)
-	log.Printf("answer is: %d", cnt)
+	return validPasswords(ps), nil
 }

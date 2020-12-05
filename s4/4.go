@@ -1,15 +1,12 @@
-package main
+package s4
 
 import (
-	"aoc2020/reader"
-	"flag"
 	"fmt"
 	"log"
 	"regexp"
 	"strconv"
 )
 
-var inputPath = flag.String("input_path", "input/4.txt", "path to the input data")
 
 var reqFields = []string{"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
 
@@ -106,16 +103,10 @@ func validPasses(ps []passport) int {
 	return valid
 }
 
-func main() {
-	flag.Parse()
-	ls, err := reader.ReadInput(*inputPath)
-	if err != nil {
-		log.Fatalf("error reading input: %v", err)
-	}
+func Solve(ls []string) (int, error) {
 	ps, err := parseInput(ls)
 	if err != nil {
-		log.Fatalf("error parsing input as passports: %v", err)
+		return 0, fmt.Errorf("error parsing input as passports: %v", err)
 	}
-	ans := validPasses(ps)
-	log.Printf("answer is: %d", ans)
+	return validPasses(ps), nil
 }
