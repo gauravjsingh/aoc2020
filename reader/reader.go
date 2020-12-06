@@ -30,5 +30,15 @@ func ParseInput(ls []string) ([]int, error) {
 
 // GroupInput groups input into groups split by blank lines.
 func GroupInput(ls []string) [][]string {
-	return nil
+	var out [][]string
+	var grp []string
+	for _, l := range ls {
+		if len(l) == 0 {
+			out = append(out, grp)
+			grp = nil
+			continue
+		}
+		grp = append(grp, l)
+	}
+	return out
 }
