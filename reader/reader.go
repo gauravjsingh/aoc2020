@@ -27,3 +27,8 @@ func ParseInput(ls []string) ([]int, error) {
 
 	return out, nil
 }
+
+// GroupInput groups input into groups split by blank lines.
+func GroupInput(ls []string) [][]string {
+	return nil
+}

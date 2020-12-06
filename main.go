@@ -2,7 +2,7 @@ package main
 
 import (
 	"aoc2020/reader"
-	"aoc2020/s5"
+	"aoc2020/s6"
 	"flag"
 	"log"
 	"path/filepath"
@@ -10,12 +10,14 @@ import (
 
 var (
 	inputPathDir = flag.String("input_path_dir", "input", "path to the input data directory")
-	inputFile = flag.String("input", "", "name of the input file")
+	inputFile    = flag.String("input", "", "name of the input file")
 )
 
 type solver interface {
 	Solve(ls []string) (string, error)
 }
+
+var solvers = []solver{}
 
 func main() {
 	flag.Parse()
@@ -24,7 +26,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("error reading input: %v", err)
 	}
-	ans, err := s5.Solve(ls)
+	ans, err := s6.Solve(ls)
 	if err != nil {
 		log.Fatalf("error solving problem: %v", err)
 	}
