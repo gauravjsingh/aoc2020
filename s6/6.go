@@ -62,9 +62,6 @@ func parseInput(ls []string) ([]party, error) {
 	return ps, nil
 }
 
-// TODO: refactor to make it less tedious.
-// type soln struct{}
-
 func Solve(ls []string) (int, error) {
 	ps, err := parseInput(ls)
 	if err != nil {

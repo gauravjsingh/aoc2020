@@ -35,7 +35,7 @@ func sum3Prod(ns []int, tot int) (int, error) {
 	return 0, fmt.Errorf("no products found for 3 numbers with total %d", tot)
 }
 
-func Solve(ls []string) (int, error){
+func Solve(ls []string) (int, error) {
 	ls, err := reader.ReadInput("input/1.txt")
 	if err != nil {
 		return 0, fmt.Errorf("error reading input: %v", err)

@@ -2,31 +2,35 @@ package main
 
 import (
 	"aoc2020/reader"
-	"aoc2020/s6"
+	"aoc2020/registry"
 	"flag"
+	"fmt"
 	"log"
 	"path/filepath"
 )
 
 var (
-	inputPathDir = flag.String("input_path_dir", "input", "path to the input data directory")
-	inputFile    = flag.String("input", "", "name of the input file")
+	inputPathDir = flag.String("input_dir", "input", "path to the input data directory")
+	problem      = flag.Int("problem", -1, "Which problem to solve?")
 )
 
-type solver interface {
-	Solve(ls []string) (string, error)
-}
-
-var solvers = []solver{}
+const fileFormat = "%d.txt"
 
 func main() {
 	flag.Parse()
-	path := filepath.Join(*inputPathDir, *inputFile)
+	if *problem == -1 {
+		*problem = len(registry.Solvers)
+	}
+	path := filepath.Join(*inputPathDir, fmt.Sprintf(fileFormat, *problem))
 	ls, err := reader.ReadInput(path)
 	if err != nil {
 		log.Fatalf("error reading input: %v", err)
 	}
-	ans, err := s6.Solve(ls)
+	s, ok := registry.Solvers[*problem]
+	if !ok {
+		log.Fatalf("solver %d not found", *problem)
+	}
+	ans, err := s(ls)
 	if err != nil {
 		log.Fatalf("error solving problem: %v", err)
 	}
