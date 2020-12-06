@@ -1,12 +1,12 @@
 package registry
 
 import (
-	"aoc2020/s1"
-	"aoc2020/s2"
-	"aoc2020/s3"
-	"aoc2020/s4"
-	"aoc2020/s5"
-	"aoc2020/s6"
+	"aoc2020/solutions/s1"
+	"aoc2020/solutions/s2"
+	"aoc2020/solutions/s3"
+	"aoc2020/solutions/s4"
+	"aoc2020/solutions/s5"
+	"aoc2020/solutions/s6"
 	"fmt"
 )
 
