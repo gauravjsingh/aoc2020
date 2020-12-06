@@ -1,4 +1,4 @@
-package registry
+package solutions
 
 import (
 	"aoc2020/solutions/s1"

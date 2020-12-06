@@ -2,7 +2,7 @@ package main
 
 import (
 	"aoc2020/reader"
-	"aoc2020/registry"
+	"aoc2020/solutions"
 	"flag"
 	"fmt"
 	"log"
@@ -19,14 +19,14 @@ const fileFormat = "%d.txt"
 func main() {
 	flag.Parse()
 	if *problem == -1 {
-		*problem = len(registry.Solvers)
+		*problem = len(solutions.Solvers)
 	}
 	path := filepath.Join(*inputPathDir, fmt.Sprintf(fileFormat, *problem))
 	ls, err := reader.ReadInput(path)
 	if err != nil {
 		log.Fatalf("error reading input: %v", err)
 	}
-	s, ok := registry.Solvers[*problem]
+	s, ok := solutions.Solvers[*problem]
 	if !ok {
 		log.Fatalf("solver %d not found", *problem)
 	}
