@@ -1,6 +1,7 @@
 package s8
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -53,13 +54,22 @@ func parseInput(ls []string) ([]instruction, error) {
 	return is, nil
 }
 
+type infiniteLoopError struct{}
+
+func (infiniteLoopError) Error() string {
+	return "infinite loop found"
+}
+
 func lastAcc(is []instruction) (int, error) {
 	sum := 0
 	ptr := 0
 	seen := make(map[int]struct{})
 	var ok bool
 	for !ok {
-		if ptr >= len(is) || ptr < 0 {
+		if ptr == len(is) {
+			return sum, nil
+		}
+		if ptr > len(is) || ptr < 0 {
 			return 0, fmt.Errorf("index %d out of range", ptr)
 		}
 		seen[ptr] = struct{}{}
@@ -75,7 +85,21 @@ func lastAcc(is []instruction) (int, error) {
 		}
 		_, ok = seen[ptr]
 	}
-	return sum, nil
+	return sum, infiniteLoopError{}
+}
+
+func swapOp(is []instruction, n int) {
+	op := is[n].op
+	var newOp operation
+	switch op {
+	case nop:
+		newOp = jmp
+	case jmp:
+		newOp = nop
+	default:
+		newOp = op
+	}
+	is[n].op = newOp
 }
 
 func Solve(ls []string) (int, error) {
@@ -83,5 +107,16 @@ func Solve(ls []string) (int, error) {
 	if err != nil {
 		return 0, fmt.Errorf("error parsing input as seats: %v", err)
 	}
-	return lastAcc(is)
+	for n := range is {
+		swapOp(is, n)
+		sum, err := lastAcc(is)
+		if err == nil {
+			return sum, nil
+		} else if !errors.Is(err, infiniteLoopError{}) {
+			return 0, fmt.Errorf("unexpected error: %v", err)
+		}
+		// Fix the array before continuing with the loop.
+		swapOp(is, n)
+	}
+	return 0, fmt.Errorf("unable to find operation to fix")
 }
