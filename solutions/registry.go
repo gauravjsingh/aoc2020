@@ -9,6 +9,7 @@ import (
 	"aoc2020/solutions/s6"
 	"aoc2020/solutions/s7"
 	"aoc2020/solutions/s8"
+	"aoc2020/solutions/s9"
 	"fmt"
 )
 
@@ -30,4 +31,5 @@ var Solvers = map[int]Solver{
 	6: intWrap(s6.Solve),
 	7: intWrap(s7.Solve),
 	8: intWrap(s8.Solve),
+	9: intWrap(s9.Solve),
 }
