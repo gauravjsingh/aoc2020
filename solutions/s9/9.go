@@ -40,7 +40,6 @@ func firstInvalid(e encoded) (int, error) {
 		for k := range activeSet {
 			if _, ok := activeSet[n-k]; ok {
 				valid = true
-				continue
 			}
 		}
 		if !valid {
@@ -57,9 +56,36 @@ func firstInvalid(e encoded) (int, error) {
 	return 0, fmt.Errorf("no invalid number found in: %v", e)
 }
 
+// Assumes that all input is positive. This is true for our input.
 func contiguous(e encoded, target int) (int, error) {
-
-	return 0, nil
+	// start and end are pointers to help compute our sum.
+	var start, end, sum int
+	for sum != target {
+		if sum < target {
+			if end >= len(e.ns) {
+				return 0, fmt.Errorf("end is out of range, negative input must exist in: %v", e.ns)
+			}
+			sum += e.ns[end]
+			end++
+		} else {
+			if start >= len(e.ns) {
+				return 0, fmt.Errorf("start is out of range, negative input must exist in: %v", e.ns)
+			}
+			sum -= e.ns[start]
+			start++
+		}
+	}
+	min := e.ns[start]
+	max := e.ns[start]
+	for i := start; i < end; i++ {
+		if e.ns[i] < min {
+			min = e.ns[i]
+		}
+		if e.ns[i] > max {
+			max = e.ns[i]
+		}
+	}
+	return min + max, nil
 }
 
 func Solve(ls []string) (int, error) {
