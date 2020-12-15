@@ -14,6 +14,7 @@ type state struct {
 
 type command interface {
 	Apply(*state)
+	ApplyB(*state)
 }
 
 type bitmask map[int]int
@@ -31,8 +32,28 @@ func (b bitmask) maskInt(n int) int {
 	return n
 }
 
+func (b bitmask) maskAddr(n, index int) []int {
+	if index >= 36 {
+		return []int{n}
+	}
+	m, ok := b[index]
+	if !ok { // X
+		ns1 := b.maskAddr(n, index+1)
+		ns2 := b.maskAddr(n^1<<index, index+1)
+		return append(ns1, ns2...)
+	}
+	if m == 1 {
+		return b.maskAddr(n|1<<index, index+1)
+	}
+	return b.maskAddr(n, index+1)
+}
+
 func (b bitmask) Apply(s *state) {
 	s.bm = b
+}
+
+func (b bitmask) ApplyB(s *state) {
+	b.Apply(s)
 }
 
 var maskRE = regexp.MustCompile(`[X01]{36}`)
@@ -63,6 +84,12 @@ type set struct {
 
 func (s set) Apply(st *state) {
 	st.rs[s.register] = st.bm.maskInt(s.value)
+}
+
+func (s set) ApplyB(st *state) {
+	for _, r := range st.bm.maskAddr(s.register, 0) {
+		st.rs[r] = s.value
+	}
 }
 
 var cmdRE = regexp.MustCompile(`mem\[(\d+)\] = (\d+)`)
@@ -107,7 +134,7 @@ func Solve(ls []string) (int, error) {
 	}
 	s := state{rs: make(map[int]int), bm: make(bitmask)}
 	for _, c := range cs {
-		c.Apply(&s)
+		c.ApplyB(&s)
 	}
 	sum := 0
 	for _, v := range s.rs {
