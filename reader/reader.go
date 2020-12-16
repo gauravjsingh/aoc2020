@@ -40,5 +40,6 @@ func GroupInput(ls []string) [][]string {
 		}
 		grp = append(grp, l)
 	}
+	out = append(out, grp)
 	return out
 }
