@@ -172,10 +172,6 @@ func parseOperators(s string) (expression, error) {
 	return binaryExpression{left: l, right: r, op: op}, nil
 }
 
-func parseExpression2(l string) (expression, error) {
-	return nil, nil
-}
-
 func simplifyExpr(s string) (int, error) {
 	if ps := breakParens(s); len(ps) > 1 {
 		nested, err := simplifyExpr(ps[1])
