@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 )
 
 type expression interface {
@@ -21,6 +22,7 @@ func newIntValue(s string, existing expression) (intValue, error) {
 	if existing != nil {
 		return 0, fmt.Errorf("newIntValue got non-nil existing: %v", existing)
 	}
+	s = strings.TrimSpace(s)
 	n, err := strconv.Atoi(s)
 	if err != nil {
 		return 0, fmt.Errorf("error parsing intValue from %q: %v", s, err)
@@ -122,7 +124,75 @@ func parseExpression(l string, existing expression) (expression, error) {
 	return e, nil
 }
 
-func Solve(ls []string) (int, error) {
+func breakParens(s string) []string {
+	i := strings.Index(s, "(")
+	if i == -1 {
+		return []string{s}
+	}
+
+	parens := 1
+	for j := i + 1; j < len(s); j++ {
+		if s[j] == '(' {
+			parens++
+		}
+		if s[j] == ')' {
+			parens--
+		}
+		if parens == 0 {
+			var out []string
+			out = append(out, s[:i])
+			out = append(out, s[i+1:j])
+			out = append(out, s[j+1:])
+			return out
+		}
+	}
+	return nil
+}
+
+func parseOperators(s string) (expression, error) {
+	// add binds more tightly, so we apply it first.
+	index := strings.Index(s, "*")
+	op := mul
+	if index == -1 {
+		index = strings.Index(s, "+")
+		op = add
+	}
+	//log.Printf("operator %d at index %d of %q", op, index, s)
+	if index == -1 {
+		return newIntValue(s, nil)
+	}
+	l, err := parseOperators(s[:index])
+	if err != nil {
+		return nil, fmt.Errorf("error parsing left subexpression at %d: %v", index, err)
+	}
+	r, err := parseOperators(s[index+1:])
+	if err != nil {
+		return nil, fmt.Errorf("error parsing right subexpression at %d: %v", index, err)
+	}
+	return binaryExpression{left: l, right: r, op: op}, nil
+}
+
+func parseExpression2(l string) (expression, error) {
+	return nil, nil
+}
+
+func simplifyExpr(s string) (int, error) {
+	if ps := breakParens(s); len(ps) > 1 {
+		nested, err := simplifyExpr(ps[1])
+		if err != nil {
+			return 0, fmt.Errorf("error evaluating nested %q in %q: %v", ps[1], s, err)
+		}
+		simplified := fmt.Sprintf("%s %d %s", ps[0], nested, ps[2])
+		return simplifyExpr(simplified)
+	}
+	e, err := parseOperators(s)
+	if err != nil {
+		return 0, fmt.Errorf("error evaluating simple expression %q: %v", s, err)
+	}
+	return e.value(), nil
+}
+
+func SolveA(ls []string) (int, error) {
 	sum := 0
 	for _, l := range ls {
 		e, err := parseExpression(l, nil)
@@ -131,6 +201,19 @@ func Solve(ls []string) (int, error) {
 		}
 		log.Printf("value of %q: %d", l, e.value())
 		sum += e.value()
+	}
+	return sum, nil
+}
+
+func SolveB(ls []string) (int, error) {
+	sum := 0
+	for _, l := range ls {
+		v, err := simplifyExpr(l)
+		if err != nil {
+			return 0, fmt.Errorf("error simplifying %q: %v", l, err)
+		}
+		log.Printf("value of %q: %d", l, v)
+		sum += v
 	}
 	return sum, nil
 }
