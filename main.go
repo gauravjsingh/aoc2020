@@ -6,18 +6,29 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
+	"runtime/pprof"
 )
 
 var (
 	inputPathDir = flag.String("input_dir", "input", "path to the input data directory")
 	problem      = flag.Int("problem", -1, "Which problem to solve?")
+	cpuProfile   = flag.String("cpuprofile", "", "write cpu profile to the given file path")
 )
 
 const fileFormat = "%d.txt"
 
 func main() {
 	flag.Parse()
+	if *cpuProfile != "" {
+		f, err := os.Create(*cpuProfile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 	if *problem == -1 {
 		*problem = len(solutions.Solvers)
 	}
