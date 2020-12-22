@@ -115,7 +115,7 @@ func Solve(ls []string) (int, error) {
 	if w == 2 {
 		d = c.d2
 	}
-	log.Printf("winner: %d, with deck: %v", w, d)
+	log.Printf("winner: %d, with deck: %v. evaluated %d games", w, d, len(globalCache))
 	score := 0
 	for i, c := range d {
 		score += c * (len(d) - i)
