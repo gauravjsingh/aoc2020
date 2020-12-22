@@ -14,6 +14,8 @@ import (
 	"aoc2020/solutions/s19"
 	"aoc2020/solutions/s2"
 	"aoc2020/solutions/s20"
+	"aoc2020/solutions/s21"
+	"aoc2020/solutions/s22"
 	"aoc2020/solutions/s3"
 	"aoc2020/solutions/s4"
 	"aoc2020/solutions/s5"
@@ -61,4 +63,6 @@ var Solvers = map[int]Solver{
 	18: intWrap(s18.SolveB),
 	19: intWrap(s19.Solve),
 	20: intWrap(s20.SolveB),
+	21: intWrap(s21.SolveA),
+	22: intWrap(s22.Solve),
 }
