@@ -2,7 +2,6 @@ package s25
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 )
 
@@ -44,7 +43,6 @@ func SolveA(ls []string) (int, error) {
 	for i := 1; i < modulus; i++ {
 		v = iterate(v, 7)
 		if v == pks[0] {
-			log.Printf("iterations is %d for %d", i, pks[0])
 			return powMod(pks[1], i), nil
 		}
 	}
